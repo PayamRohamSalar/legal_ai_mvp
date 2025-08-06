@@ -1,0 +1,8 @@
+# Create empty __init__.py files
+echo. > src\__init__.py
+echo. > src\api\__init__.py
+echo. > src\data_processing\__init__.py
+echo. > src\database\__init__.py
+echo. > src\search\__init__.py
+echo. > src\embeddings\__init__.py
+echo. > config\__init__.py

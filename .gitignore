@@ -1,0 +1,52 @@
+# Environment variables - Never commit secrets!
+.env
+.env.*
+*.env
+
+# Keep the example file in the repository
+!.env.example
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Docker persistent data
+postgres_data/
+chroma_data/
+redis_data/
+pgadmin_data/
+
+# IDE configuration files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Project-specific ignores
+# Ignore raw data files to prevent bloating the repository
+/data/laws/*.docx
+/data/laws/*.pdf
+# Keep the directory structure
+!/data/laws/.gitkeep
+
+# Logs and uploaded files
+/logs/
+/uploads/
+
+# Test and coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/

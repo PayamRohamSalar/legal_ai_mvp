@@ -1,0 +1,8 @@
+# Build and Run the Services
+docker-compose up --build -d
+
+# Stop the Services
+docker-compose down
+
+# Show container list
+docker ps

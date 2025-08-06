@@ -1,0 +1,6 @@
+data_processing/
+├── document_processor.py    # واسط اصلی پردازش
+├── text_parser.py          # تجزیه ساختار قوانین
+├── chunking_strategy.py    # الگوریتم‌های چانک‌بندی
+├── metadata_extractor.py   # استخراج متادیتا
+└── validation.py          # اعتبارسنجی داده‌ها

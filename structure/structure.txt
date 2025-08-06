@@ -1,0 +1,32 @@
+D:\OneDrive\My Projects\Smart Legal Assistant\legal_ai_mvp\
+├── .env
+├── .env.example
+├── README.md
+├── requirements.txt
+├── config/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── llm_config.py
+│   └── database_config.py
+├── docs/
+│   ├── architecture.md
+│   ├── technology_stack.md
+│   └── deployment_strategy.md
+├── src/
+│   ├── __init__.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── main.py
+│   ├── data_processing/
+│   ├── database/
+│   ├── search/
+│   └── embeddings/
+├── data/
+│   └── laws/
+│       └── Part2_Legals.docx
+├── docker/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+└── .github/
+    └── workflows/
+        └── ci.yml

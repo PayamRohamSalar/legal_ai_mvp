@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      # context حالا به پوشه جاری (ریشه پروژه) اشاره دارد
+      context: .
+      dockerfile: docker/Dockerfile
+      target: development
+    container_name: legal_ai_backend
+    env_file:
+      - .env # متغیرها را از فایل .env می خواند
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      chromadb:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    networks:
+      - legal_ai_network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: legal_ai_postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - legal_ai_network
+
+  chromadb:
+    image: chromadb/chroma:0.5.0
+    container_name: legal_ai_chromadb
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=FALSE
+    ports:
+      - "8001:8000"
+    networks:
+      - legal_ai_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: legal_ai_redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - legal_ai_network
+
+  streamlit:
+    build:
+      # مسیر context برای بیلد کردن اپ streamlit
+      context: ./streamlit_app
+      dockerfile: Dockerfile
+    container_name: legal_ai_streamlit
+    environment:
+      - BACKEND_URL=http://backend:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+    networks:
+      - legal_ai_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: legal_ai_pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - legal_ai_network
+    profiles:
+      - dev-tools
+
+volumes:
+  postgres_data:
+  chroma_data:
+  redis_data:
+  pgadmin_data:
+
+networks:
+  legal_ai_network:
+    driver: bridge
